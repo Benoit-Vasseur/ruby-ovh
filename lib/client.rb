@@ -4,8 +4,11 @@ require 'json'
 require 'yaml'
 require 'digest/sha1'
 
+# Main module
 module OVH
+  # Main class
   class Client
+
 
     attr_reader :application_key, :application_secret, :consumer_key
 
@@ -17,7 +20,11 @@ module OVH
       @consumer_key       = consumer_key || conf['consumer_key']
     end
 
-    def request_consummerkey(access_rules)
+    # Request a consumer key
+    #
+    # @param [Hash] access_rules
+    # @return [Hash] the JSON response
+    def request_consumerkey(access_rules)
       uri = ::URI.parse('https://eu.api.ovh.com')
       http = ::Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
@@ -33,6 +40,10 @@ module OVH
       resp
     end
 
+    # Make a get request to the OVH api
+    #
+    # @param url [String]
+    # @return [Net::HTTPResponse] response
     def get(url)
       uri = ::URI.parse('https://eu.api.ovh.com')
       http = ::Net::HTTP.new(uri.host, uri.port)

@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: readme
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!file.readme.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: readme</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<h1 id="label-Important+note">Important note</h1>
+
+<p>This is not an official repository of OVH and this is a work in progress</p>
+
+<p>Lightweight wrapper around OVH&#39;s APIs. Handles all the hard work
+including credential creation and requests signing.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require_relative'>require_relative</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>client</span><span class='tstring_end'>&#39;</span></span>
+
+<span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'>OVH</span><span class='op'>::</span><span class='const'>Client</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='label'>application_key:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&lt;app key&gt;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>application_secret:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&lt;app secret&gt;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>consumer_key:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&lt;consumer key&gt;</span><span class='tstring_end'>&#39;</span></span>
+<span class='rparen'>)</span>
+
+<span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/me</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_body'>body</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>firstname</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+</code></pre>
+
+<h1 id="label-Installation">Installation</h1>
+
+<p>For now you have to clone the repo and make a bundle.</p>
+
+<h1 id="label-Example+usage">Example usage</h1>
+
+<h3 id="label-Use+the+API+on+behalf+of+a+user">Use the API on behalf of a user</h3>
+<ol><li>
+<p>Create an application</p>
+</li></ol>
+
+<p>To interact with the APIs, the SDK needs to identify itself using an
+application_key and an application_secret. To get them, you need to
+register your application.  For now only the OVH Europe API is supported. 
+- <a href="https://eu.api.ovh.com/createApp/">OVH Europe</a></p>
+
+<p>Once created, you will obtain an <strong>application key (AK)</strong> and
+an <strong>application secret (AS)</strong>.</p>
+<ol><li>
+<p>Configure your application</p>
+</li></ol>
+
+<p>The easiest and safest way to use your application&#39;s credentials is
+create a conf.yml configuration file in application&#39;s working
+directory. Here is how it looks like:  <code>yaml   application_key:
+app_key   application_secret: app_secret   # consumer_key: consumer_key
+</code></p>
+<ol><li>
+<p>Authorize your application to access a customer account</p>
+</li></ol>
+
+<p>To allow your application to access a customer account using the API on
+your behalf, you need a <strong>consumer key (CK)</strong>.</p>
+
+<p>Here is a sample code you can use to allow your application to access a
+customer&#39;s informations:</p>
+
+<pre class="code ruby"><code class="ruby">require_relative &#39;client&#39;
+# create a client using configuration
+client =  OVH::Client.new
+
+# Request RO, /me API access
+access_rules = [
+    {&#39;method&#39;: &#39;GET&#39;, &#39;path&#39;: &#39;/me&#39;},
+]
+
+# Request token
+validation = client.request_consumerkey(access_rules).body
+
+puts &quot;Please visit #{validation[&#39;validationUrl&#39;]}&quot;
+
+
+puts &quot;Welcome #{client.get(&#39;me&#39;).body[&#39;firstname&#39;]}&quot;
+puts &quot;Btw, your consumerKey is #{validation[&#39;consumerKey&#39;]}&quot;
+</code></pre>
+
+<p>Returned <strong>consumerKey</strong> should then be kept to avoid
+re-authenticating your end-user on each use.</p>
+
+<p>To request full and unlimited access to the API, you may use wildcards:</p>
+
+<pre class="code ruby"><code class="ruby">access_rules = [
+  {&#39;method&#39;: &#39;GET&#39;, &#39;path&#39;: &#39;/*&#39;},
+  {&#39;method&#39;: &#39;POST&#39;, &#39;path&#39;: &#39;/*&#39;},
+  {&#39;method&#39;: &#39;PUT&#39;, &#39;path&#39;: &#39;/*&#39;},
+  {&#39;method&#39;: &#39;DELETE&#39;, &#39;path&#39;: &#39;/*&#39;}
+]
+</code></pre>
+
+<h1 id="label-Run+the+tests">Run the tests</h1>
+
+<p>For now the only test is a <em>Cucumber</em> test (integration test). More
+tests will come (cucmber and Rspec)</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_cucumber'>cucumber</span>
+</code></pre>
+
+<h1 id="label-Build+the+documentation">Build the documentation</h1>
+
+<p>Documentation is managed with <em>Yard</em></p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_yard'>yard</span>
+</code></pre>
+</div></div>
+
+    <div id="footer">
+  Generated on Tue Sep  1 21:28:03 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>
